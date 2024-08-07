@@ -12,8 +12,8 @@
 	compatible = "st,stm32wl55-nucleo";
 
 	chosen {
-		zephyr,console = &usart1;
-		zephyr,shell-uart = &usart1;
+		zephyr,console = &lpuart1;
+		zephyr,shell-uart = &lpuart1;
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
 		zephyr,code-partition = &flash0;
@@ -32,6 +32,11 @@
 		green_led_3: led_2 {
 			gpios = <&gpiob 12 GPIO_ACTIVE_LOW>;
 			label = "User LED3";
+		};
+
+		antenna_pwr: ant_pwr {
+			gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
+			label = "Antenna Power";
 		};
 	};
 
@@ -58,34 +63,36 @@
 		sw1 = &user_button_2;
 		sw2 = &user_button_3;
 		lora0 = &lora;
-		uart = &usart1;
+		// uart = &usart1;
+		rpc-uart = &usart1;
+		ant-pwr = &antenna_pwr;
 	};
 
-	power-states {
-		stop0: state0 {
-			compatible = "zephyr,power-state";
-			power-state-name = "suspend-to-idle";
-			substate-id = <1>;
-			min-residency-us = <100>;
-		};
-		stop1: state1 {
-			compatible = "zephyr,power-state";
-			power-state-name = "suspend-to-idle";
-			substate-id = <2>;
-			min-residency-us = <500>;
-		};
-		stop2: state2 {
-			compatible = "zephyr,power-state";
-			power-state-name = "suspend-to-idle";
-			substate-id = <3>;
-			min-residency-us = <900>;
-		};
-	};
+	// power-states {
+	// 	stop0: state0 {
+	// 		compatible = "zephyr,power-state";
+	// 		power-state-name = "suspend-to-idle";
+	// 		substate-id = <1>;
+	// 		min-residency-us = <100>;
+	// 	};
+	// 	stop1: state1 {
+	// 		compatible = "zephyr,power-state";
+	// 		power-state-name = "suspend-to-idle";
+	// 		substate-id = <2>;
+	// 		min-residency-us = <500>;
+	// 	};
+	// 	stop2: state2 {
+	// 		compatible = "zephyr,power-state";
+	// 		power-state-name = "suspend-to-idle";
+	// 		substate-id = <3>;
+	// 		min-residency-us = <900>;
+	// 	};
+	// };
 };
 
-&cpu0 {
-	cpu-power-states = <&stop0 &stop1 &stop2>;
-};
+// &cpu0 {
+// 	cpu-power-states = <&stop0 &stop1 &stop2>;
+// };
 
 &lptim1 {
 	status = "okay";
@@ -117,12 +124,13 @@
 &lpuart1 {
 	pinctrl-0 = <&lpuart1_tx_pa2 &lpuart1_rx_pa3>;
 	pinctrl-names = "default";
-	current-speed = <38400>;
+	current-speed = <115200>;
 	status = "okay";
 };
 
 &usart1 {
-	pinctrl-0 = <&usart1_tx_pb6 &usart1_rx_pb7>;
+	// pinctrl-0 = <&usart1_tx_pb6 &usart1_rx_pb7>;
+	pinctrl-0 = <&usart1_tx_pa9 &usart1_rx_pa10>;
 	pinctrl-names = "default";
 	current-speed = <115200>;
 	status = "okay";
@@ -137,13 +145,13 @@
 	bme680: bme680@76 {
 		compatible = "bosch,bme680";
 		reg = <0x76>;
-		label = "BME680";
+		// label = "BME680";
 		status = "okay";
 	};
 	lis2dw12: lis2dw12@19 {
 		compatible = "st,lis2dw12";
 		reg = <0x19>;
-		label = "LIS2DW12";
+		// label = "LIS2DW12";
 		status = "okay";
 	};
 
@@ -151,17 +159,17 @@
 
 &spi1 {
 	pinctrl-0 = <&spi1_nss_pa4 &spi1_sck_pa5
-		     &spi1_miso_pa6 &spi1_mosi_pa7>;
+	&spi1_miso_pa6 &spi1_mosi_pa7>;
 	pinctrl-names = "default";
 	status = "okay";
 };
 
 // &adc1 {
-// 	status = "okay";
+	//     status = "okay";
 // };
 
 // &die_temp {
-// 	status = "okay";
+	//     status = "okay";
 // };
 
 &aes {
@@ -176,22 +184,44 @@
 	status = "okay";
 };
 
+// Sashi Device tree
+// &subghzspi {
+// 	status = "okay";
+// 	lora: radio@0 {
+// 		status = "okay";
+// 		antenna-enable-gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
+// 		tx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>;
+// 		rx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
+// 		// dio3-tcxo-voltage = <SX126X_DIO3_TCXO_1V7>;
+// 		// tcxo-power-startup-delay-ms = <5>;
+// 	};
+// };
+
+// Dev board, have to modify
 &subghzspi {
 	status = "okay";
 	lora: radio@0 {
 		status = "okay";
-		antenna-enable-gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
-		tx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>;
-		rx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
+		antenna-enable-gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+		tx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>; /* FE_CTRL1 */
+		rx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>; /* FE_CTRL2 */
 		// dio3-tcxo-voltage = <SX126X_DIO3_TCXO_1V7>;
 		// tcxo-power-startup-delay-ms = <5>;
+		/* High-power output is selected as a consequence of using
+		 * tx/rx-enable-gpio to control FE_CTRL1 and FE_CTRL2. Low-power
+		 * output would require both FE_CTRL1 and FE_CTRL2 to be high,
+		 * which is not currently supported by the driver.
+		 */
+		power-amplifier-output = "rfo-hp";
+		rfo-lp-max-power = <15>;
+		rfo-hp-max-power = <22>;
 	};
 };
 
 &flash0 {
 	/*
 	 * For more information, see:
-	 * http://docs.zephyrproject.org/latest/guides/dts/index.html#flash-partitions
+	 * http: //docs.zephyrproject.org/latest/guides/dts/index.html#flash-partitions
 	 */
 	partitions {
 		compatible = "fixed-partitions";

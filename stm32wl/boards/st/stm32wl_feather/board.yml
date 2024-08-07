@@ -1,0 +1,5 @@
+board:
+  name: stm32wl_feather
+  vendor: pure_engineering
+  socs:
+    - name: stm32wl55xx
