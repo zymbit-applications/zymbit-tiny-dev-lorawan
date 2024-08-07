@@ -1,6 +1,7 @@
 ZEPHYR_VERSION=v3.7.0
 zephyr_sdk_version=0.16.8
-
+Yellow='\033[0;33m'
+Color_Off='\033[0m'
 
 
 zephyr_release_setup_description="install Zephyr ($ZEPHYR_VERSION) and SDK"
@@ -55,6 +56,16 @@ zephyr_release_setup()
         chmod +x $zephyr_sdk_filename
         ./setup.sh
     fi
+
+    # Install Jlink
+    jlink_version=798b
+    mkdir -p ~/opt/SEGGER
+    cd ~/opt/SEGGER
+    wget --post-data "accept_license_agreement=accepted" https://www.segger.com/downloads/jlink/JLink_Linux_V$jlink_version\_x86_64.tgz
+    tar xf JLink_Linux_V$jlink_version\_x86_64.tgz
+    chmod a-w ~/opt/SEGGER/JLink_Linux_V$jlink_version\_x86_64
+    echo "${Yellow}Please run${Color_Off}: sudo cp ~/opt/SEGGER/JLink_Linux_V$jlink_version\_*/99-jlink.rules /etc/udev/rules.d/99-jlink.rules"
+
 
     # Go back to the directory
     cd $CURR_DIR
