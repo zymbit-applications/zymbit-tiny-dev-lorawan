@@ -629,6 +629,7 @@ void lorawan_tx_uplink_timer_handler(struct k_timer *not_used)
 
 // ------------------------------------------ END LORAWAN SETUP ------------------------------------------ //
 
+// Setting the antenna power device to manually drive
 const struct gpio_dt_spec ant_pwr = GPIO_DT_SPEC_GET_OR(DT_ALIAS(ant_pwr), gpios, {0});
 
 int main(void)
@@ -646,9 +647,11 @@ int main(void)
 		return 0;
 	}
 
+	// configure and drive the antenna power pin high
 	ret = gpio_pin_configure_dt(&ant_pwr, GPIO_OUTPUT_ACTIVE);
 	if (ret < 0)
 	{
+		LOG_ERR("ant_pwr gpio error");
 		return 0;
 	}
 	gpio_pin_set(ant_pwr.port, ant_pwr.pin, 1);

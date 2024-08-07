@@ -12,7 +12,7 @@ ADD_DEFINITIONS(-DNETWORK_CHANNEL=${NETWORK_CHANNEL})
 set(BOARD_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 find_package(Zephyr HINTS $ENV{ZEPHYR_BASE})
-project(wl55_demo)
+project(zymbit_tiny_device)
 
 FILE(GLOB_RECURSE app_sources
   src/*.c

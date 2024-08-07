@@ -12,8 +12,8 @@
 	compatible = "st,stm32wl55-nucleo";
 
 	chosen {
-		zephyr,console = &lpuart1;
-		zephyr,shell-uart = &lpuart1;
+		zephyr,console = &lpuart1;		// Changed to lpuart for debugging purposes
+		zephyr,shell-uart = &lpuart1;	// Changed to lpuart for debugging purposes
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
 		zephyr,code-partition = &flash0;
@@ -34,6 +34,11 @@
 			label = "User LED3";
 		};
 
+		/* 
+		 * Added antenna_pwr as an LED as an easy way to drive this pin high.  This pin is what turns on the antenna switch and therefore allowing operation. 
+		 * This is a workaround for now as it should really be defind inthe radio0 device definition however for some reason it is not driving this pin high 
+		 * when defining in antenna-enable-gpios so we are doing it manually here for now.
+		 */
 		antenna_pwr: ant_pwr {
 			gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
 			label = "Antenna Power";
@@ -65,9 +70,10 @@
 		lora0 = &lora;
 		// uart = &usart1;
 		rpc-uart = &usart1;
-		ant-pwr = &antenna_pwr;
+		ant-pwr = &antenna_pwr;  // alias for antenna power control
 	};
 
+	// Remove power states for now for debugging and can bring back later
 	// power-states {
 	// 	stop0: state0 {
 	// 		compatible = "zephyr,power-state";
@@ -129,7 +135,6 @@
 };
 
 &usart1 {
-	// pinctrl-0 = <&usart1_tx_pb6 &usart1_rx_pb7>;
 	pinctrl-0 = <&usart1_tx_pa9 &usart1_rx_pa10>;
 	pinctrl-names = "default";
 	current-speed = <115200>;
@@ -202,7 +207,7 @@
 	status = "okay";
 	lora: radio@0 {
 		status = "okay";
-		antenna-enable-gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+		antenna-enable-gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>; // This should be defined as gpiob 0 but it is not setting the pin high therefore we are manually driving.  See the LED definition at the top <antenna_pwr>
 		tx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>; /* FE_CTRL1 */
 		rx-enable-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>; /* FE_CTRL2 */
 		// dio3-tcxo-voltage = <SX126X_DIO3_TCXO_1V7>;
