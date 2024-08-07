@@ -1,5 +1,5 @@
-ZEPHYR_VERSION=v3.3.0
-zephyr_sdk_version=0.16.0
+ZEPHYR_VERSION=v3.7.0
+zephyr_sdk_version=0.16.8
 
 
 

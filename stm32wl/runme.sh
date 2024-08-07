@@ -1,11 +1,11 @@
 #!/bin/bash
-ZEPHYR_DIR=zephyr_v3.3.0
+ZEPHYR_DIR=zephyr_v3.7.0
 env_description="setups the path for the toolchain"
 env()
 {
     export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
-    # export ZEPHYR_SDK_INSTALL_DIR=~/zephyr-sdk-0.16.1
-    # source ~/$ZEPHYR_DIR/zephyr/zephyr-env.sh
+    export ZEPHYR_SDK_INSTALL_DIR=~/zephyr-sdk-0.16.8
+    source ~/$ZEPHYR_DIR/zephyr/zephyr-env.sh
 }
 
 build_feather_description="does a full build with STM32WL-Feather board"
@@ -34,7 +34,7 @@ flash()
 flash_manual_description="flash using jlinkexe"
 flash_manual()
 {
-	# build_feather
+	build_feather
 	JLinkExe -device STM32WL55CC -if SWD -speed 4000 -autoconnect 1 -CommanderScript runner.jlink
 }
 
