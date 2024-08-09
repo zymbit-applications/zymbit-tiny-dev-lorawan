@@ -24,24 +24,28 @@ zephyr_release_setup()
             ccache dfu-util device-tree-compiler wget \
             python3-dev python3-pip python3-setuptools python3-tk python3-wheel xz-utils file \
             make gcc gcc-multilib g++-multilib libsdl2-dev -y
+
+        sudo apt install python3-venv
+        python3 -m venv ~/zephyrproject/.venv
+        source ~/zephyrproject/.venv/bin/activate
             
-        /usr/bin/python3 -m pip install --upgrade pip
-        pip3 install --user -U west
+        python3 -m pip install --upgrade pip
+        pip3 install -U west
         echo 'export PATH=~/.local/bin:"$PATH"' >> ~/.bashrc
         source ~/.bashrc
-        pip3 install --user pynrfjprog
+        pip3 install pynrfjprog
 
         # install ZephyrRTOS
         west init -m https://github.com/zephyrproject-rtos/zephyr --mr $ZEPHYR_VERSION
         west update
         west zephyr-export
-        pip3 install --user -r zephyr/scripts/requirements.txt
+        pip3 install -r zephyr/scripts/requirements.txt
 
         # fixes the builing issue for cryptography module
         pip3 install --upgrade pip
         pip3 install setuptools-rust
         
-        pip3 install --user -r bootloader/mcuboot/scripts/requirements.txt    
+        pip3 install -r bootloader/mcuboot/scripts/requirements.txt    
     fi
 
     # download and install zephyr-sdk toolchain
