@@ -15,7 +15,9 @@ find_package(Zephyr HINTS $ENV{ZEPHYR_BASE})
 project(zymbit_tiny_device)
 
 FILE(GLOB_RECURSE app_sources
-  src/*.c
+  # src/uart_loop_back.c
+  src/main.c
+
 )
 
 target_include_directories(app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/.)
