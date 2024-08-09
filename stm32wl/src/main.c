@@ -95,7 +95,8 @@ void rx_timeout_handler(struct k_timer *not_used)
 }
 
 /*
- * Read characters from UART until line end is detected. Afterwards push the
+ * Read characters from UART until no character is detected for the timeout time specified. 
+ * Afterwards push the
  * data to the message queue.
  */
 void serial_cb(const struct device *dev, void *user_data)
@@ -260,13 +261,6 @@ static void lorwan_datarate_changed(enum lorawan_datarate dr)
 	LOG_INF("New Datarate: DR_%d, Max Payload %d", dr, max_size);
 }
 
-void lorawan_tx_uplink_timer_handler(struct k_timer *not_used)
-{
-	// Temp command to send to uart.  Expects a response that will then get uplinked
-
-	uint8_t read_probe_1[] = {0x01, 0x03, 0x01, 0x08, 0x00, 0x01, 0x04, 0x34};
-	send_uart_command(uart0, read_probe_1, sizeof(read_probe_1));
-}
 
 // ------------------------------------------ END LORAWAN SETUP ------------------------------------------ //
 
