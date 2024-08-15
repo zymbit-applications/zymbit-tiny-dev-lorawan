@@ -22,7 +22,8 @@ LOG_MODULE_REGISTER(hemrmes_zymbit);
 #define UART_RX_TIMEOUT K_SECONDS(2)  // Amount of time to wait without receiving any packets before sending to uplink
 
 // interface settings
-#define BAUDRATE 115200
+// #define BAUDRATE 115200
+#define BAUDRATE 14400
 #define PARITY UART_CFG_PARITY_NONE
 #define STOP_BITS UART_CFG_STOP_BITS_1
 #define FLOW_CTRL UART_CFG_FLOW_CTRL_NONE
